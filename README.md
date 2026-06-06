@@ -1,5 +1,10 @@
 # AI Center: Jarvis AI Assistant for Home Assistant
 
+> [!IMPORTANT]
+> **Viktigt meddelande / Important Note:** Detta projekt är under uppbyggnad (**Work In Progress - WIP**) och utvecklas löpande i mån av tid.
+>
+> *This project is a work in progress (WIP) and is developed continuously whenever time permits.*
+
 Welcome to the **AI Center**! This repository is a fully-configured Home Assistant Add-on repository hosting the **AI Center Assistant** (Jarvis) — a premium, custom-built AI Home Assistant interface powered by Google's advanced **Gemini 2.5 Flash** model.
 
 Unlike standard text-based terminals, this add-on provides a gorgeous, modern chat interface embedded directly into your Home Assistant sidebar, giving Gemini native, real-time control over your smart home entities (lights, climates, switches, history, and system health).
