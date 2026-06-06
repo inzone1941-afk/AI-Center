@@ -1,5 +1,5 @@
 name: "AI Center Assistant"
-version: "1.0.0"
+version: "1.0.1"
 slug: "ai_center_assistant"
 description: "En intelligent AI-assistent (Jarvis) för ditt smarta hem drivet av Gemini 2.5."
 url: "https://github.com/inzone1941-afk/AI-Center"
