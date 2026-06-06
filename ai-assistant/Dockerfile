@@ -1,3 +1,5 @@
+ARG BUILD_FROM=ghcr.io/home-assistant/base:3.21
+
 # ==========================================
 # STAGE 1: Build the Vite React Frontend
 # ==========================================
@@ -19,8 +21,14 @@ RUN npm run build
 # ==========================================
 # STAGE 2: Create the Final Add-on Image
 # ==========================================
-ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:3.21
 FROM $BUILD_FROM
+
+# Add image labels
+LABEL \
+  org.opencontainers.image.title="AI Center Assistant" \
+  org.opencontainers.image.description="An intelligent, beautiful AI Home Assistant interface driven by Gemini 2.5." \
+  org.opencontainers.image.source="https://github.com/inzone1941-afk/AI-Center" \
+  org.opencontainers.image.licenses="MIT"
 
 # Install Node.js, npm, and jq (required for reading configuration options)
 RUN apk add --no-cache nodejs npm jq
