@@ -1,0 +1,22 @@
+name: "AI Center Assistant"
+version: "1.0.0"
+slug: "ai_center_assistant"
+description: "En intelligent AI-assistent (Jarvis) för ditt smarta hem drivet av Gemini 2.5."
+url: "https://github.com/inzone1941-afk/AI-Center"
+startup: "services"
+arch:
+  - amd64
+  - aarch64
+init: false
+ingress: true
+ingress_port: 7682
+panel_icon: "mdi:robot"
+panel_title: "Jarvis AI"
+options:
+  gemini_api_key: ""
+  hass_url: "http://supervisor/core/api"
+schema:
+  gemini_api_key: "str?"
+  hass_url: "str?"
+ports:
+  7682/tcp: 7682

@@ -1,0 +1,10 @@
+---
+build_from:
+  aarch64: ghcr.io/home-assistant/aarch64-base:3.21
+  amd64: ghcr.io/home-assistant/amd64-base:3.21
+
+labels:
+  org.opencontainers.image.title: "AI Center Assistant"
+  org.opencontainers.image.description: "An intelligent, beautiful AI Home Assistant interface driven by Gemini 2.5."
+  org.opencontainers.image.source: "https://github.com/inzone1941-afk/AI-Center"
+  org.opencontainers.image.licenses: "MIT"
