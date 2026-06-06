@@ -1,13 +1,16 @@
-# AI Center
+# React + Vite
 
-Welcome to the **AI Center**! This repository is designed to be the central hub for managing, configuring, and orchestrating various AI integrations, models, and agents.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## 🚀 Getting Started
+Currently, two official plugins are available:
 
-To get started with the AI Center, configure your local environment and add your custom agents or scripts.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## 📁 Repository Structure
+## React Compiler
 
-* `config/` - Configuration files for AI services.
-* `agents/` - Custom AI agent definitions and logic.
-* `scripts/` - Utility scripts and helpers.
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
