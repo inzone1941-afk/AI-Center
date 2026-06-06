@@ -10,6 +10,7 @@ arch:
 init: false
 ingress: true
 ingress_port: 7682
+homeassistant_api: true
 panel_icon: "mdi:robot"
 panel_title: "Jarvis AI"
 options:
