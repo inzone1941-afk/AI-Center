@@ -34,7 +34,7 @@ function App() {
 
   const fetchStatus = async () => {
     try {
-      const res = await fetch('/api/status');
+      const res = await fetch('api/status');
       const data = await res.json();
       setStatus({
         geminiConfigured: data.geminiConfigured,
@@ -68,7 +68,7 @@ function App() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch('api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
