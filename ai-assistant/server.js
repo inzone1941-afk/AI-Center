@@ -10,6 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+console.log("AI Center assistant v1.0.2 starting...");
 app.use(express.json());
 
 const PORT = process.env.PORT || 7682;
