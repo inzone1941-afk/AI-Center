@@ -3,7 +3,7 @@ import {
   Send, CheckCircle2, Trash2, 
   Lightbulb, Thermometer, Home, 
   Activity, ArrowRight, ShieldAlert, RefreshCw,
-  Menu, X, BrainCircuit, Bot, User
+  Menu, X, BrainCircuit, Bot, User, Mic
 } from 'lucide-react';
 import './App.css';
 
@@ -138,6 +138,12 @@ function App() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isSpeechSupported] = useState(
+    typeof window !== 'undefined' && 
+    (!!window.SpeechRecognition || !!window.webkitSpeechRecognition)
+  );
+  const recognitionRef = useRef(null);
   const [status, setStatus] = useState({
     geminiConfigured: false,
     hassConfigured: false,
@@ -178,6 +184,57 @@ function App() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  useEffect(() => {
+    // Initialize Web Speech API Speech Recognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const rec = new SpeechRecognition();
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.lang = lang === 'sv' ? 'sv-SE' : 'en-US';
+
+      rec.onresult = (event) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        if (transcript.trim()) {
+          setInput(transcript);
+        }
+      };
+
+      rec.onerror = (err) => {
+        console.error('Speech recognition error:', err);
+        setIsRecording(false);
+      };
+
+      rec.onend = () => {
+        setIsRecording(false);
+      };
+
+      recognitionRef.current = rec;
+    }
+  }, []);
+
+  const toggleSpeech = () => {
+    if (!recognitionRef.current) {
+      alert(lang === 'sv' ? 'Röstigenkänning stöds inte i denna webbläsare.' : 'Speech recognition is not supported in this browser.');
+      return;
+    }
+
+    if (isRecording) {
+      recognitionRef.current.stop();
+      setIsRecording(false);
+    } else {
+      try {
+        recognitionRef.current.start();
+        setIsRecording(true);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
 
   const handleSend = async (e, textToSend = null) => {
     if (e) e.preventDefault();
@@ -387,6 +444,17 @@ function App() {
             className="chat-input"
             disabled={loading}
           />
+          {isSpeechSupported && (
+            <button 
+              type="button" 
+              className={`mic-btn ${isRecording ? 'recording' : ''}`}
+              onClick={toggleSpeech}
+              title={lang === 'sv' ? 'Tala in meddelande' : 'Speak message'}
+              disabled={loading}
+            >
+              <Mic className="mic-icon" />
+            </button>
+          )}
           <button type="submit" className="send-btn" disabled={loading || !input.trim()}>
             <Send className="send-icon" />
           </button>
