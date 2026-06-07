@@ -3,7 +3,7 @@ import {
   Send, CheckCircle2, Trash2, 
   Lightbulb, Thermometer, Home, 
   Activity, ArrowRight, ShieldAlert, RefreshCw,
-  Menu, X, BrainCircuit, Bot, User, Mic
+  Menu, X, BrainCircuit, Bot, User, Mic, Info
 } from 'lucide-react';
 import './App.css';
 
@@ -26,6 +26,12 @@ const translations = {
     errorCommunication: 'Något gick fel vid kommunikationen med AI:n.',
     systemError: 'Systemfel: Det gick inte att ansluta till serverns API.',
     subtitle: 'Drivs av Gemini 2.5 Flash',
+    about: 'Om AI Center',
+    aboutTitle: 'Om AI Center & Jarvis',
+    projectDesc: 'AI Center Assistant (Jarvis) är en avancerad och skräddarsydd AI-assistent integrerad direkt i ditt Home Assistant-smarta hem. Drivs av Google Gemini för intelligent styrning av dina enheter via röst och text.',
+    developedBy: 'Utvecklad av:',
+    contact: 'Kontakt & Support:',
+    close: 'Stäng',
     quickPrompts: [
       { text: 'Vilka lampor är tända?' },
       { text: 'Hur är temperaturen inomhus?' },
@@ -51,6 +57,12 @@ const translations = {
     errorCommunication: 'Something went wrong communicating with the AI.',
     systemError: 'System Error: Could not connect to the server API.',
     subtitle: 'Powered by Gemini 2.5 Flash',
+    about: 'About AI Center',
+    aboutTitle: 'About AI Center & Jarvis',
+    projectDesc: 'AI Center Assistant (Jarvis) is an advanced custom AI assistant integrated directly into your Home Assistant smart home. Powered by Google Gemini for intelligent control of your devices using voice and text.',
+    developedBy: 'Developed by:',
+    contact: 'Contact & Support:',
+    close: 'Close',
     quickPrompts: [
       { text: 'Which lights are turned on?' },
       { text: 'What is the indoor temperature?' },
@@ -138,6 +150,7 @@ function App() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isSpeechSupported] = useState(
     typeof window !== 'undefined' && 
@@ -368,6 +381,9 @@ function App() {
         </div>
 
         <div className="sidebar-footer">
+          <button onClick={() => setAboutOpen(true)} className="about-btn">
+            <Info className="icon" /> {t.about}
+          </button>
           <button onClick={handleClear} className="clear-btn">
             <Trash2 className="icon" /> {t.clearConversation}
           </button>
@@ -460,6 +476,60 @@ function App() {
           </button>
         </form>
       </main>
+
+      {/* About Modal */}
+      {aboutOpen && (
+        <div className="modal-backdrop" onClick={() => setAboutOpen(false)}>
+          <div className="modal-content glass-panel fade-in" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <BrainCircuit className="modal-logo-icon" />
+              <h2>{t.aboutTitle}</h2>
+              <button 
+                type="button" 
+                className="modal-close-btn"
+                onClick={() => setAboutOpen(false)}
+                aria-label={t.close}
+              >
+                <X className="close-icon" />
+              </button>
+            </div>
+            
+            <div className="modal-body">
+              <p className="project-desc">{t.projectDesc}</p>
+              
+              <div className="info-section">
+                <h4>{t.developedBy}</h4>
+                <div className="developer-info">
+                  <span className="dev-name">Roland</span>
+                  <a href="https://github.com/inzone1941-afk" target="_blank" rel="noopener noreferrer" className="dev-link">
+                    @inzone1941-afk
+                  </a>
+                </div>
+              </div>
+              
+              <div className="info-section">
+                <h4>{t.contact}</h4>
+                <div className="contact-list">
+                  <div className="contact-item">
+                    <span className="contact-label">E-post:</span>
+                    <a href="mailto:inzone1941@gmail.com" className="contact-value">inzone1941@gmail.com</a>
+                  </div>
+                  <div className="contact-item">
+                    <span className="contact-label">GitHub:</span>
+                    <a href="https://github.com/inzone1941-afk/AI-Center" target="_blank" rel="noopener noreferrer" className="contact-value">GitHub Repository</a>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="modal-footer-info">
+                <span>Version 1.2.0</span>
+                <span>•</span>
+                <span>MIT License</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
