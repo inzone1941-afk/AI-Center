@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { 
   Send, CheckCircle2, Trash2, 
   Lightbulb, Thermometer, Home, 
-  Activity, ArrowRight, ShieldAlert, Sparkles, RefreshCw,
-  Menu, X
+  Activity, ArrowRight, ShieldAlert, RefreshCw,
+  Menu, X, BrainCircuit, Bot, User
 } from 'lucide-react';
 import './App.css';
 
@@ -184,7 +184,7 @@ function App() {
       {/* Sidebar for Status & Actions */}
       <aside className={`sidebar glass-panel ${sidebarOpen ? 'open' : ''}`}>
         <div className="brand">
-          <Sparkles className="brand-icon" />
+          <BrainCircuit className="brand-icon" />
           <h2>AI Center</h2>
           <button 
             type="button" 
@@ -273,7 +273,9 @@ function App() {
             <Menu className="menu-icon" />
           </button>
           <div className="header-info">
-            <div className="avatar">🤖</div>
+            <div className="avatar">
+              <Bot className="avatar-icon" />
+            </div>
             <div>
               <h2>Jarvis Assistant</h2>
               <p className="subtitle">Drivs av Gemini 2.5 Flash</p>
@@ -289,7 +291,11 @@ function App() {
               className={`message-wrapper ${msg.role === 'user' ? 'user-wrapper' : 'assistant-wrapper'} fade-in`}
             >
               <div className="message-avatar">
-                {msg.role === 'user' ? '👤' : '🤖'}
+                {msg.role === 'user' ? (
+                  <User className="message-avatar-icon" />
+                ) : (
+                  <Bot className="message-avatar-icon" />
+                )}
               </div>
               <div className={`message-bubble ${msg.role === 'user' ? 'user-bubble' : 'assistant-bubble'}`}>
                 <div className="message-content">
@@ -300,7 +306,9 @@ function App() {
           ))}
           {loading && (
             <div className="message-wrapper assistant-wrapper fade-in">
-              <div className="message-avatar">🤖</div>
+              <div className="message-avatar">
+                <Bot className="message-avatar-icon" />
+              </div>
               <div className="message-bubble assistant-bubble loading-bubble">
                 <div className="typing-indicator">
                   <span></span>
