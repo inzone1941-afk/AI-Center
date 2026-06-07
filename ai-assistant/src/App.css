@@ -354,9 +354,36 @@
   margin-bottom: 0;
 }
 
+.message-content strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.message-content code {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.85em;
+  color: #f472b6;
+}
+
+.message-content .bullet-list {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
 .message-content .list-item {
-  margin-left: 16px;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+
+.message-content .heading-1 {
+  font-size: 1.25rem;
+  margin: 16px 0 8px 0;
+  font-weight: 700;
+  color: #ffffff;
 }
 
 .message-content .heading-2 {
@@ -371,6 +398,10 @@
   margin: 8px 0 4px 0;
   font-weight: 600;
   color: #cbd5e1;
+}
+
+.message-content .line-break {
+  height: 8px;
 }
 
 /* Typing Indicator */
@@ -465,26 +496,172 @@
   height: 18px;
 }
 
+/* Sidebar toggle and close buttons (Desktop hidden) */
+.sidebar-toggle-btn,
+.sidebar-close-btn {
+  display: none;
+}
+
 /* Responsive collapse of sidebar */
 @media (max-width: 768px) {
   .app-container {
-    flex-direction: column;
+    padding: 8px;
+    gap: 0;
   }
+
+  /* Sidebar styling on Mobile: Slide-out drawer overlay */
   .sidebar {
-    width: 100%;
-    height: auto;
-    gap: 16px;
-    padding: 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 290px;
+    max-width: 85vw;
+    height: 100%;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 0 16px 16px 0;
+    border-left: none;
+    background: rgba(10, 11, 20, 0.95);
+    backdrop-filter: blur(20px);
+    box-shadow: none;
   }
-  .quick-buttons {
-    flex-direction: row;
-    flex-wrap: wrap;
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 15px 0 35px rgba(0, 0, 0, 0.6);
   }
-  .quick-btn {
-    flex: 1 1 140px;
-    padding: 8px 12px;
+
+  .sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(3, 7, 18, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    animation: fadeIn 0.2s ease-out;
   }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .sidebar-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    margin-left: auto;
+    transition: all 0.2s ease;
+  }
+
+  .sidebar-close-btn:hover {
+    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .sidebar-close-btn .close-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Chat Area Styles on Mobile */
   .chat-area {
-    height: calc(100% - 220px);
+    width: 100%;
+    height: 100%;
+    gap: 8px;
+  }
+
+  .chat-header {
+    height: 64px;
+    padding: 0 12px;
+    border-radius: 12px;
+  }
+
+  .sidebar-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #e2e8f0;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    margin-right: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .sidebar-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .sidebar-toggle-btn .menu-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .header-info .avatar {
+    font-size: 1.5rem;
+  }
+
+  .header-info h2 {
+    font-size: 1rem;
+  }
+
+  .header-info .subtitle {
+    font-size: 0.7rem;
+  }
+
+  /* Message spacing and sizing on mobile */
+  .messages-container {
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .message-wrapper {
+    max-width: 90%;
+    gap: 8px;
+  }
+
+  .message-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
+
+  .message-bubble {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+  }
+
+  /* Input Form on Mobile */
+  .input-form {
+    height: 56px;
+    padding: 0 6px 0 12px;
+    border-radius: 12px;
+  }
+
+  .chat-input {
+    font-size: 0.9rem;
+  }
+
+  .send-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+  }
+
+  .send-icon {
+    width: 16px;
+    height: 16px;
   }
 }

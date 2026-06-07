@@ -230,7 +230,7 @@ When formatting replies, use friendly tone and clean markdown.`,
 // Serve frontend static files in production
 app.use(express.static(path.join(__dirname, 'dist')));
 
-app.get('*any', (req, res) => {
+app.get('*splat', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 

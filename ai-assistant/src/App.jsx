@@ -1,10 +1,76 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { 
-  Send, Cpu, AlertTriangle, CheckCircle2, Trash2, 
-  HelpCircle, Lightbulb, Thermometer, Home, MessageSquare, 
-  Activity, ArrowRight, ShieldAlert, Sparkles, RefreshCw
+  Send, CheckCircle2, Trash2, 
+  Lightbulb, Thermometer, Home, 
+  Activity, ArrowRight, ShieldAlert, Sparkles, RefreshCw,
+  Menu, X
 } from 'lucide-react';
 import './App.css';
+
+const renderMarkdown = (text) => {
+  if (!text) return null;
+  const lines = text.split('\n');
+  const elements = [];
+  let currentList = [];
+
+  const parseInline = (str) => {
+    let html = str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+      
+    // Bold: **text** -> <strong>text</strong>
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Inline code: `code` -> <code>code</code>
+    html = html.replace(/`(.*?)`/g, '<code>$1</code>');
+    
+    return <span dangerouslySetInnerHTML={{ __html: html }} />;
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    
+    if (line.startsWith('* ') || line.startsWith('- ')) {
+      currentList.push(
+        <li key={`li-${i}`} className="list-item">
+          {parseInline(line.slice(2))}
+        </li>
+      );
+    } else {
+      if (currentList.length > 0) {
+        elements.push(
+          <ul key={`ul-${i}`} className="bullet-list">
+            {currentList}
+          </ul>
+        );
+        currentList = [];
+      }
+      
+      if (line.startsWith('### ')) {
+        elements.push(<h4 key={i} className="heading-3">{parseInline(line.slice(4))}</h4>);
+      } else if (line.startsWith('## ')) {
+        elements.push(<h3 key={i} className="heading-2">{parseInline(line.slice(3))}</h3>);
+      } else if (line.startsWith('# ')) {
+        elements.push(<h2 key={i} className="heading-1">{parseInline(line.slice(2))}</h2>);
+      } else if (line.trim() === '') {
+        elements.push(<div key={i} className="line-break" />);
+      } else {
+        elements.push(<p key={i}>{parseInline(line)}</p>);
+      }
+    }
+  }
+
+  if (currentList.length > 0) {
+    elements.push(
+      <ul key="ul-end" className="bullet-list">
+        {currentList}
+      </ul>
+    );
+  }
+
+  return elements;
+};
 
 function App() {
   const [messages, setMessages] = useState([
@@ -15,6 +81,7 @@ function App() {
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [status, setStatus] = useState({
     geminiConfigured: false,
     hassConfigured: false,
@@ -32,23 +99,23 @@ function App() {
     { text: 'Släck allt i huset', icon: Home }
   ];
 
-  const fetchStatus = async () => {
-    try {
-      const res = await fetch('api/status');
-      const data = await res.json();
-      setStatus({
-        geminiConfigured: data.geminiConfigured,
-        hassConfigured: data.hassConfigured,
-        hassUrl: data.hassUrl,
-        loading: false
-      });
-    } catch (err) {
-      console.error('Failed to fetch status:', err);
-      setStatus(prev => ({ ...prev, loading: false }));
-    }
-  };
-
   useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const res = await fetch('api/status');
+        const data = await res.json();
+        setStatus({
+          geminiConfigured: data.geminiConfigured,
+          hassConfigured: data.hassConfigured,
+          hassUrl: data.hassUrl,
+          loading: false
+        });
+      } catch (err) {
+        console.error('Failed to fetch status:', err);
+        setStatus(prev => ({ ...prev, loading: false }));
+      }
+    };
+
     fetchStatus();
   }, []);
 
@@ -62,6 +129,7 @@ function App() {
     if (!prompt.trim() || loading) return;
 
     if (!textToSend) setInput('');
+    setSidebarOpen(false);
 
     const newMessages = [...messages, { role: 'user', content: prompt }];
     setMessages(newMessages);
@@ -109,11 +177,23 @@ function App() {
 
   return (
     <div className="app-container">
+      {sidebarOpen && (
+        <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />
+      )}
+
       {/* Sidebar for Status & Actions */}
-      <aside className="sidebar glass-panel">
+      <aside className={`sidebar glass-panel ${sidebarOpen ? 'open' : ''}`}>
         <div className="brand">
           <Sparkles className="brand-icon" />
           <h2>AI Center</h2>
+          <button 
+            type="button" 
+            className="sidebar-close-btn"
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Stäng sidopanel"
+          >
+            <X className="close-icon" />
+          </button>
         </div>
 
         {/* Connection status section */}
@@ -184,6 +264,14 @@ function App() {
       {/* Main chat window */}
       <main className="chat-area">
         <header className="chat-header glass-panel">
+          <button 
+            type="button" 
+            className="sidebar-toggle-btn"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Öppna sidopanel"
+          >
+            <Menu className="menu-icon" />
+          </button>
           <div className="header-info">
             <div className="avatar">🤖</div>
             <div>
@@ -205,19 +293,7 @@ function App() {
               </div>
               <div className={`message-bubble ${msg.role === 'user' ? 'user-bubble' : 'assistant-bubble'}`}>
                 <div className="message-content">
-                  {msg.content.split('\n').map((line, i) => {
-                    // Very basic markdown formatting for lists/bold
-                    if (line.startsWith('* ') || line.startsWith('- ')) {
-                      return <li key={i} className="list-item">{line.slice(2)}</li>;
-                    }
-                    if (line.startsWith('### ')) {
-                      return <h4 key={i} className="heading-3">{line.slice(4)}</h4>;
-                    }
-                    if (line.startsWith('## ')) {
-                      return <h3 key={i} className="heading-2">{line.slice(3)}</h3>;
-                    }
-                    return <p key={i}>{line}</p>;
-                  })}
+                  {renderMarkdown(msg.content)}
                 </div>
               </div>
             </div>
