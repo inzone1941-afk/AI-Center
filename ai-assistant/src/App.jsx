@@ -26,6 +26,7 @@ const translations = {
     errorCommunication: 'Något gick fel vid kommunikationen med AI:n.',
     systemError: 'Systemfel: Det gick inte att ansluta till serverns API.',
     subtitle: 'Drivs av Gemini 2.5 Flash',
+    selectTheme: 'Välj Tema',
     about: 'Om AI Center',
     aboutTitle: 'Om AI Center & Jarvis',
     projectDesc: 'AI Center Assistant (Jarvis) är en avancerad och skräddarsydd AI-assistent integrerad direkt i ditt Home Assistant-smarta hem. Drivs av Google Gemini för intelligent styrning av dina enheter via röst och text.',
@@ -57,6 +58,7 @@ const translations = {
     errorCommunication: 'Something went wrong communicating with the AI.',
     systemError: 'System Error: Could not connect to the server API.',
     subtitle: 'Powered by Gemini 2.5 Flash',
+    selectTheme: 'Select Theme',
     about: 'About AI Center',
     aboutTitle: 'About AI Center & Jarvis',
     projectDesc: 'AI Center Assistant (Jarvis) is an advanced custom AI assistant integrated directly into your Home Assistant smart home. Powered by Google Gemini for intelligent control of your devices using voice and text.',
@@ -151,6 +153,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [theme, setTheme] = useState(localStorage.getItem('jarvis-theme') || 'indigo');
   const [isRecording, setIsRecording] = useState(false);
   const [isSpeechSupported] = useState(
     typeof window !== 'undefined' && 
@@ -165,6 +168,19 @@ function App() {
   });
   
   const messagesEndRef = useRef(null);
+
+  const themes = [
+    { id: 'indigo', nameSv: 'Indigo Natt', nameEn: 'Midnight Indigo', color: '#6366f1' },
+    { id: 'amber', nameSv: 'Bärnsten', nameEn: 'Cyberpunk Amber', color: '#f59e0b' },
+    { id: 'emerald', nameSv: 'Smaragd', nameEn: 'Emerald Forest', color: '#10b981' },
+    { id: 'crimson', nameSv: 'Krimsonröd', nameEn: 'Crimson Eclipse', color: '#ef4444' },
+    { id: 'sky', nameSv: 'Havsbris', nameEn: 'Ocean Breeze', color: '#0ea5e9' }
+  ];
+
+  const changeTheme = (newTheme) => {
+    setTheme(newTheme);
+    localStorage.setItem('jarvis-theme', newTheme);
+  };
 
   // Suggested quick prompts in Swedish
   const quickPrompts = [
@@ -302,7 +318,7 @@ function App() {
   };
 
   return (
-    <div className="app-container">
+    <div className={`app-container theme-${theme}`}>
       {sidebarOpen && (
         <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />
       )}
@@ -356,6 +372,23 @@ function App() {
               )}
             </div>
           )}
+        </div>
+
+        {/* Theme Selector */}
+        <div className="status-card">
+          <h3>{t.selectTheme}</h3>
+          <div className="theme-selector">
+            {themes.map((th) => (
+              <button
+                key={th.id}
+                onClick={() => changeTheme(th.id)}
+                className={`theme-dot ${theme === th.id ? 'active' : ''}`}
+                style={{ backgroundColor: th.color }}
+                title={lang === 'sv' ? th.nameSv : th.nameEn}
+                aria-label={lang === 'sv' ? th.nameSv : th.nameEn}
+              />
+            ))}
+          </div>
         </div>
 
         {/* Quick action buttons */}
