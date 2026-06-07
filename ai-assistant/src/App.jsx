@@ -7,6 +7,62 @@ import {
 } from 'lucide-react';
 import './App.css';
 
+const translations = {
+  sv: {
+    welcome: 'Hej! Jag är Jarvis, din AI-assistent kopplad till ditt smarta hem. Jag kan styra dina lampor, kontrollera temperaturer, läsa av sensorer och ge dig information om ditt systems hälsa. Vad kan jag hjälpa dig med idag?',
+    systemStatus: 'Systemstatus',
+    fetchingStatus: 'Hämtar status...',
+    geminiApi: 'Gemini API:',
+    homeAssistant: 'Home Assistant:',
+    connected: 'Ansluten',
+    missing: 'Saknas',
+    linked: 'Kopplad',
+    notLinked: 'Ej kopplad',
+    quickCommands: 'Snabbkommandon',
+    clearConversation: 'Rensa konversation',
+    clearConfirm: 'Är du säker på att du vill rensa konversationen?',
+    inputPlaceholder: 'Skriv ett meddelande eller kontrollera en enhet...',
+    errorPrefix: 'Fel:',
+    errorCommunication: 'Något gick fel vid kommunikationen med AI:n.',
+    systemError: 'Systemfel: Det gick inte att ansluta till serverns API.',
+    subtitle: 'Drivs av Gemini 2.5 Flash',
+    quickPrompts: [
+      { text: 'Vilka lampor är tända?' },
+      { text: 'Hur är temperaturen inomhus?' },
+      { text: 'Kör en hälsokontroll på mina enheter' },
+      { text: 'Släck allt i huset' }
+    ]
+  },
+  en: {
+    welcome: 'Hello! I am Jarvis, your AI assistant connected to your smart home. I can control your lights, check temperatures, read sensors, and give you information about your system health. How can I help you today?',
+    systemStatus: 'System Status',
+    fetchingStatus: 'Fetching status...',
+    geminiApi: 'Gemini API:',
+    homeAssistant: 'Home Assistant:',
+    connected: 'Connected',
+    missing: 'Missing',
+    linked: 'Linked',
+    notLinked: 'Not Linked',
+    quickCommands: 'Quick Commands',
+    clearConversation: 'Clear Conversation',
+    clearConfirm: 'Are you sure you want to clear the conversation?',
+    inputPlaceholder: 'Type a message or control a device...',
+    errorPrefix: 'Error:',
+    errorCommunication: 'Something went wrong communicating with the AI.',
+    systemError: 'System Error: Could not connect to the server API.',
+    subtitle: 'Powered by Gemini 2.5 Flash',
+    quickPrompts: [
+      { text: 'Which lights are turned on?' },
+      { text: 'What is the indoor temperature?' },
+      { text: 'Run a health check on my devices' },
+      { text: 'Turn off everything in the house' }
+    ]
+  }
+};
+
+const lang = navigator.language && navigator.language.startsWith('sv') ? 'sv' : 'en';
+const t = translations[lang];
+
 const renderMarkdown = (text) => {
   if (!text) return null;
   const lines = text.split('\n');
@@ -76,7 +132,7 @@ function App() {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: 'Hej! Jag är Jarvis, din AI-assistent kopplad till ditt smarta hem. Jag kan styra dina lampor, kontrollera temperaturer, läsa av sensorer och ge dig information om ditt systems hälsa. Vad kan jag hjälpa dig med idag?'
+      content: t.welcome
     }
   ]);
   const [input, setInput] = useState('');
@@ -93,10 +149,10 @@ function App() {
 
   // Suggested quick prompts in Swedish
   const quickPrompts = [
-    { text: 'Vilka lampor är tända?', icon: Lightbulb },
-    { text: 'Hur är temperaturen inomhus?', icon: Thermometer },
-    { text: 'Kör en hälsokontroll på mina enheter', icon: Activity },
-    { text: 'Släck allt i huset', icon: Home }
+    { text: t.quickPrompts[0].text, icon: Lightbulb },
+    { text: t.quickPrompts[1].text, icon: Thermometer },
+    { text: t.quickPrompts[2].text, icon: Activity },
+    { text: t.quickPrompts[3].text, icon: Home }
   ];
 
   useEffect(() => {
@@ -150,14 +206,14 @@ function App() {
       } else {
         setMessages(prev => [...prev, { 
           role: 'assistant', 
-          content: `⚠️ Fel: ${data.error || 'Något gick fel vid kommunikationen med AI:n.'}` 
+          content: `⚠️ ${t.errorPrefix} ${data.error || t.errorCommunication}` 
         }]);
       }
     } catch (error) {
       console.error('Error sending message:', error);
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: '⚠️ Systemfel: Det gick inte att ansluta till serverns API.' 
+        content: `⚠️ ${t.systemError}` 
       }]);
     } finally {
       setLoading(false);
@@ -165,11 +221,11 @@ function App() {
   };
 
   const handleClear = () => {
-    if (window.confirm('Är du säker på att du vill rensa konversationen?')) {
+    if (window.confirm(t.clearConfirm)) {
       setMessages([
         {
           role: 'assistant',
-          content: 'Hej! Jag är Jarvis, din AI-assistent kopplad till ditt smarta hem. Jag kan styra dina lampor, kontrollera temperaturer, läsa av sensorer och ge dig information om ditt systems hälsa. Vad kan jag hjälpa dig med idag?'
+          content: t.welcome
         }
       ]);
     }
@@ -198,28 +254,28 @@ function App() {
 
         {/* Connection status section */}
         <div className="status-card">
-          <h3>Systemstatus</h3>
+          <h3>{t.systemStatus}</h3>
           {status.loading ? (
             <div className="status-loading">
               <RefreshCw className="spinner" />
-              <span>Hämtar status...</span>
+              <span>{t.fetchingStatus}</span>
             </div>
           ) : (
             <div className="status-list">
               <div className="status-item">
-                <span className="label">Gemini API:</span>
+                <span className="label">{t.geminiApi}</span>
                 {status.geminiConfigured ? (
-                  <span className="badge success"><CheckCircle2 className="icon" /> Ansluten</span>
+                  <span className="badge success"><CheckCircle2 className="icon" /> {t.connected}</span>
                 ) : (
-                  <span className="badge danger"><ShieldAlert className="icon" /> Saknas</span>
+                  <span className="badge danger"><ShieldAlert className="icon" /> {t.missing}</span>
                 )}
               </div>
               <div className="status-item">
-                <span className="label">Home Assistant:</span>
+                <span className="label">{t.homeAssistant}</span>
                 {status.hassConfigured ? (
-                  <span className="badge success"><CheckCircle2 className="icon" /> Kopplad</span>
+                  <span className="badge success"><CheckCircle2 className="icon" /> {t.linked}</span>
                 ) : (
-                  <span className="badge danger"><ShieldAlert className="icon" /> Ej kopplad</span>
+                  <span className="badge danger"><ShieldAlert className="icon" /> {t.notLinked}</span>
                 )}
               </div>
               {status.hassUrl && (
@@ -234,7 +290,7 @@ function App() {
 
         {/* Quick action buttons */}
         <div className="quick-actions">
-          <h3>Snabbkommandon</h3>
+          <h3>{t.quickCommands}</h3>
           <div className="quick-buttons">
             {quickPrompts.map((prompt, index) => {
               const Icon = prompt.icon;
@@ -256,7 +312,7 @@ function App() {
 
         <div className="sidebar-footer">
           <button onClick={handleClear} className="clear-btn">
-            <Trash2 className="icon" /> Rensa konversation
+            <Trash2 className="icon" /> {t.clearConversation}
           </button>
         </div>
       </aside>
@@ -278,7 +334,7 @@ function App() {
             </div>
             <div>
               <h2>Jarvis Assistant</h2>
-              <p className="subtitle">Drivs av Gemini 2.5 Flash</p>
+              <p className="subtitle">{t.subtitle}</p>
             </div>
           </div>
         </header>
@@ -327,7 +383,7 @@ function App() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Skriv ett meddelande eller kontrollera en enhet..."
+            placeholder={t.inputPlaceholder}
             className="chat-input"
             disabled={loading}
           />
