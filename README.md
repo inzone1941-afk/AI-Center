@@ -22,6 +22,7 @@ Unlike standard text-based terminals, this add-on provides a gorgeous, modern ch
 * **⚡ Gemini 2.5 Flash Engine**: Leverages Google's fast, high-context Gemini model for quick responses and intelligent tool calling.
 * **💬 Quick Action Suggestions**: Interactive buttons for common smart home prompts (e.g., checking active lights or indoor temperature) to minimize typing.
 
+<img width="1624" height="1290" alt="jar" src="https://github.com/user-attachments/assets/be62c12a-20f4-4cac-ad16-1234cac3f035" />
 ---
 
 ## 📁 Repository Structure
